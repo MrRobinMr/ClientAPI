@@ -1,19 +1,34 @@
 from flask import Flask, request, jsonify
-import os
-import subprocess
-import socket
+import Info
 
 app = Flask(__name__)
 
-#gering basic data about computer
+#get basic data about computer
 @app.route("/get-info")
 def get_user():
-    computer_info = {
-        "user" : os.getlogin(),
-        "host_name" : socket.gethostname(),
-        "ip" : socket.gethostbyname(socket.gethostname())
-    }
-    return jsonify(computer_info), 200
+    try:
+        computer_info = Info.Info()
+        return jsonify(computer_info), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#get basic data about gpu
+@app.route("/get-info/gpu")
+def get_gpu():
+    try:
+        gpu_info = Info.Gpu_Info()
+        return jsonify(gpu_info), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#get basic data about cpu
+@app.route("/get-info/cpu")
+def get_cpu():
+    try:
+        cpu_info = Info.Cpu_Info()
+        return jsonify(cpu_info), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 """
 #commands response for computers
